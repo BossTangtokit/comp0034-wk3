@@ -1,6 +1,7 @@
 import csv
 import os
 from pathlib import Path
+from flask_marshmallow import Marshmallow
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -16,6 +17,11 @@ class Base(DeclarativeBase):
 # Pass a subclass of either DeclarativeBase or DeclarativeBaseNoMeta to the constructor.
 db = SQLAlchemy(model_class=Base)
 
+
+# Create a global SQLAlchemy object
+db = SQLAlchemy()
+# Create a global Flask-Marshmallow object
+ma = Marshmallow()
 
 def create_app(test_config=None):
     # create and configure the app
@@ -42,6 +48,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    #Create a global SQLAlchemy object
+    db = SQLAlchemy()
+    #Create a global Marshmallow object
+    ma = Marshmallow(app)
     # Initialise Flask with the SQLAlchemy database extension
     db.init_app(app)
 
@@ -59,9 +69,10 @@ def create_app(test_config=None):
 
         # Register the routes with the app in the context
         from paralympics import paralympics
-
+ # Initialise Flask-SQLAlchemy
+    db.init_app(app)
+    # Initialise Flask-Marshmallow
+    ma.init_app(app)
     return app
 
 
-# Import can be here instead (but not at the top of the file) to avoid circular import issues
-# from paralympics.models import Region, Event, User
