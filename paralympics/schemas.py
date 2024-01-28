@@ -1,4 +1,4 @@
-from paralympics.models import Event, Region
+from paralympics.models import Region, Event
 from paralympics import db, ma
 
 
